@@ -10,7 +10,11 @@ export const MoviesList = ({ movies }) => {
           <Link to={`/movies/${id}`} state={{ from: location }}>
             <h2>{title}</h2>
             <img
-              src={`https://image.tmdb.org/t/p/w500/${url}`}
+              src={
+                url
+                  ? `https://image.tmdb.org/t/p/w500/${url}`
+                  : 'https://i.ibb.co/bPtNcLX/NoImage.png'
+              }
               alt={title}
               width="300"
             />
