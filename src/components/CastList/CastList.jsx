@@ -3,10 +3,12 @@ export const CastList = ({ info }) => {
     <ul>
       {info.cast.map(({ id, name, profile_path, character }) => (
         <li key={id}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500/${profile_path}`}
-            alt={name}
-          />
+          {profile_path && (
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${profile_path}`}
+              alt={name}
+            />
+          )}
           <p>{name}</p>
           <p>Character: {character}</p>
         </li>
