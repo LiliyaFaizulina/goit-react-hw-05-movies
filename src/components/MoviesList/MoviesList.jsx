@@ -1,14 +1,19 @@
-import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {
+  Gallery,
+  GalleryItem,
+  MovieTitle,
+  MovieLink,
+} from './MoviesList.styled';
 
 export const MoviesList = ({ movies }) => {
   const location = useLocation();
   return (
-    <ul>
+    <Gallery>
       {movies.map(({ id, title, url }) => (
-        <li key={id}>
-          <Link to={`/movies/${id}`} state={{ from: location }}>
-            <h2>{title}</h2>
+        <GalleryItem key={id}>
+          <MovieLink to={`/movies/${id}`} state={{ from: location }}>
             <img
               src={
                 url
@@ -18,9 +23,20 @@ export const MoviesList = ({ movies }) => {
               alt={title}
               width="300"
             />
-          </Link>
-        </li>
+            <MovieTitle>{title}</MovieTitle>
+          </MovieLink>
+        </GalleryItem>
       ))}
-    </ul>
+    </Gallery>
   );
+};
+
+MoviesList.propTypes = {
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      url: PropTypes.string,
+    })
+  ).isRequired,
 };

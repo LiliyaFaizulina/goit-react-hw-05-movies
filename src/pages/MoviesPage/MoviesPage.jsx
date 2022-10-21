@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Loader } from 'components/Loader/Loader';
 import { MoviesList } from 'components/MoviesList/MoviesList';
 import { fetchMoviesByQuery } from 'fetchAPI/fetchAPI';
+import { MainContainer } from 'utils/GlobalStyle';
+import { Form, Button, Input } from './MoviesPage.styled';
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
@@ -15,6 +17,8 @@ const MoviesPage = () => {
   const onFormSubmit = event => {
     event.preventDefault();
     setSearchParams({ searchQuery });
+    setMovies([]);
+    setError(null);
   };
 
   const onInput = e => {
@@ -23,37 +27,45 @@ const MoviesPage = () => {
 
   useEffect(() => {
     const getMovies = async query => {
-      const movies = await fetchMoviesByQuery(query);
-      setMovies(movies);
-    };
-
-    if (query) {
       setIsLoading(true);
       try {
-        getMovies(query);
+        const movies = await fetchMoviesByQuery(query);
+        if (!movies.length) {
+          throw new Error('Oops!');
+        }
+        setMovies(movies);
       } catch (error) {
         setError(error.message);
       } finally {
         setIsLoading(false);
       }
+    };
+
+    if (query) {
+      getMovies(query);
     }
   }, [query]);
 
   return (
-    <>
-      <form onSubmit={onFormSubmit}>
-        <input
+    <MainContainer>
+      <Form onSubmit={onFormSubmit}>
+        <Input
           type="text"
           name="search"
           value={searchQuery}
           onChange={onInput}
         />
-        <button>Search</button>
-      </form>
+        <Button>Search</Button>
+      </Form>
       {isLoading && <Loader />}
+      {error && (
+        <p>
+          Sorry! We didn't find anything on your query! Change search params and
+          try again!
+        </p>
+      )}
       {movies.length > 0 && <MoviesList movies={movies} />}
-      {error && <p>Oops!</p>}
-    </>
+    </MainContainer>
   );
 };
 

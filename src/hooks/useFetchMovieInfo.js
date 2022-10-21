@@ -10,18 +10,18 @@ export const useFetchMovieInfo = (endpoint = '') => {
 
   useEffect(() => {
     const getMovie = async movieId => {
-      const movieDetails = await fetchMovieById(movieId, endpoint);
-      setMovieInfo(movieDetails);
+      setIsLoading(true);
+      try {
+        const movieDetails = await fetchMovieById(movieId, endpoint);
+        setMovieInfo(movieDetails);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    setIsLoading(true);
-    try {
-      getMovie(id);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+    getMovie(id);
   }, [id, endpoint]);
 
   return { movieInfo, isLoading, error };

@@ -15,7 +15,6 @@ export const fetchMoviesByQuery = async query => {
   const { data } = await axios('search/movie', {
     params: { api_key: KEY, query },
   });
-
   return transformMovies(data.results);
 };
 
